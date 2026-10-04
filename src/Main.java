@@ -1,12 +1,13 @@
+import bridge.AsciiRenderer;
 import bridge.Circle;
 import bridge.RasterRenderer;
 import bridge.Renderer;
 import bridge.Shape;
 import bridge.Square;
 import bridge.VectorRenderer;
-
 import java.util.function.Function;
 
+/** Client: runs the demonstration checks against the real Bridge classes. */
 public class Main {
 
     private static final int RADIUS = 2;
@@ -31,9 +32,12 @@ public class Main {
         checkCombination("T3", square, new VectorRenderer(), "VECTOR square side=3");
         checkCombination("T4", square, new RasterRenderer(), "RASTER square side=3 (pixels)");
         checkRuntimeSwitch("T5");
+        checkCombination("T6", circle, new AsciiRenderer(), "ASCII circle radius=2 (characters)");
+        checkCombination("T7", square, new AsciiRenderer(), "ASCII square side=3 (characters)");
         System.out.println("SUMMARY: " + passed + "/" + total + " PASS");
     }
 
+    /** Builds a shape with a renderer, runs it and compares with the expected text. */
     private static void checkCombination(String id, Function<Renderer, Shape> factory,
                                          Renderer renderer, String expected) {
         Shape shape = factory.apply(renderer);
@@ -43,6 +47,7 @@ public class Main {
         record(id, actual.equals(expected), classes, "result=" + actual, "result=" + expected);
     }
 
+    /** Swaps the renderer on one Circle and proves identity, data and result changes. */
     private static void checkRuntimeSwitch(String id) {
         Circle original = new Circle("C-5", RADIUS, new VectorRenderer());
         String idBefore = original.getId();
